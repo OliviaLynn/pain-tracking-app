@@ -8,6 +8,7 @@ int painLevel = -1;
 boolean startedDrawing, inDrawingMode;
 ArrayList linesX = new ArrayList();
 ArrayList linesY = new ArrayList();
+
 boolean reset, redraw;
 
 int tBoxX, tBoxY, tBoxWidth, tBoxHeight;
@@ -24,6 +25,15 @@ int cancelY = 170;
 int cancelWidth = 150; //used to be 100x100
 int cancelHeight = 150;
 
+class Entry {
+  int painLevel = -1;
+  ArrayList linesX = new ArrayList();
+  ArrayList linesY = new ArrayList();
+}
+
+Entry currentEntry = new Entry();
+
+ArrayList pastEntries = new ArrayList();
 
 void setup() {
   size(800, 1200);
@@ -41,13 +51,14 @@ void setup() {
   
   tbox = false;
   
-  tBoxX = width/2 - 200;
+  tBoxX = width/2 - 225;
   tBoxY = height/2 - 300;
   tBoxWidth = 450;
   tBoxHeight = 450;
   btnWidth = tBoxWidth/5;
   btnHeight = btnWidth;
   btnY = tBoxY + 200;
+  print(currentEntry.linesX);
 
 }
 
@@ -87,25 +98,33 @@ void mousePressed() {
     tbox = true;
     showTBox();
   } else if (winCount == 1) {
-    painLevel = getScaleButton();
-    if (painLevel > -1) {
+    currentEntry.painLevel = getScaleButton();
+    if (currentEntry.painLevel > -1) {
       winCount = 2;
       showTBox();
     }
   } else if (winCount == 2) {  
+    pastEntries.add(currentEntry);
     doReset();
   }
 }
 
 int getScaleButton() {
   if (tBoxX < mouseX && mouseX < tBoxX + tBoxWidth) {
+    //Find how far from the left of the tbox the mouse is, then divide that by the button width
+    //to figure out what button it must be in. The 1 is added because we made the scale 1 - 5, and 
+    //naturally Java starts the indices at 0 and ends at 4
     return 1 + (mouseX - tBoxX)/(btnWidth);
   }
   return -1;
 } 
 
 color colorScale(int i) {
-  return color(100 + i*40,100 + i*15,100);
+  if (i == -1) {
+    return defaultPainColor;
+  } else {
+    return color(100 + i*40,100 + i*15,100);
+  }
 }
 
 void makeWindowOneButton(int i) {
@@ -158,36 +177,47 @@ void drawLines() {
     stroke(painColor);
     strokeWeight(15);
     line(pmouseX, pmouseY, mouseX, mouseY);
-    linesX.add(mouseX);
-    linesY.add(mouseY);
+    currentEntry.linesX.add(mouseX);
+    currentEntry.linesY.add(mouseY);
   }
   else {
     startedDrawing = true;
     inDrawingMode = true;
+    painColor = colorScale(currentEntry.painLevel);
   }
 }
 
 void redrawPainArea() {
-  if (linesX.size() == 0) { 
+  redrawSingleEntry(currentEntry);
+  if (pastEntries.size() > 0) {
+    for (int i = 0; i < pastEntries.size(); i++) {
+      redrawSingleEntry((Entry)pastEntries.get(i));
+    }
+  }
+}
+
+void redrawSingleEntry(Entry e) {
+  if (e.linesX.size() == 0) { 
     print("none");
     return; 
   }
-  stroke(painColor);
+  stroke(colorScale(e.painLevel));
   strokeWeight(15);
   int x0, x1, y0, y1;
-  x0 = (int)linesX.get(0);
-  y0 = (int)linesY.get(0);
-  for (int i = 1; i < linesX.size(); i++) {
+  x0 = (int)e.linesX.get(0);
+  y0 = (int)e.linesY.get(0);
+  for (int i = 1; i < e.linesX.size(); i++) {
     x1 = x0;
     y1 = y0;
-    x0 = (int)linesX.get(i);
-    y0 = (int)linesY.get(i);
+    x0 = (int)e.linesX.get(i);
+    y0 = (int)e.linesY.get(i);
     line(x0, y0, x1, y1);
   }
 }
 
 void doReset() {
     tbox = false;
+    startedDrawing = false;
     winCount = 0;
     image(img, 0, 0);
     painColor = colorScale(painLevel - 1);
@@ -195,8 +225,8 @@ void doReset() {
 }
 
 void doCancel() {
-    linesX = new ArrayList();
-    linesY = new ArrayList();
+    startedDrawing = false;
+    currentEntry = new Entry();
     painColor = defaultPainColor;
 }
 
