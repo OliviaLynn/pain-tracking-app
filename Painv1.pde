@@ -27,7 +27,7 @@ int cancelHeight = 100;
 void setup() {
   size(800, 1200);
   winCount = 0;
-  img = loadImage("body.png");
+  img = loadImage("edit-figure.jpg");
   image(img, 0, 0);
   defaultPainColor = color(230, 80, 0);
   painColor = defaultPainColor;
@@ -140,14 +140,14 @@ void showWindowTwo() {
   }
 }
 
-void showTBox() {
+void showTBox() { //displays popup window
   stroke(100,100,150);
   strokeWeight(3);
   fill(#ffffff);
   rect(tBoxX, tBoxY, tBoxWidth, tBoxHeight);
-  if (winCount == 1) {
+  if (winCount == 1) { //question 1
     showWindowOne();
-  } else if (winCount == 2) {
+  } else if (winCount == 2) { //question 2
     showWindowTwo();
   }
 }
