@@ -36,6 +36,16 @@ Entry currentEntry = new Entry();
 
 ArrayList pastEntries = new ArrayList();
 
+class Entry {
+  int painLevel = -1;
+  ArrayList linesX = new ArrayList();
+  ArrayList linesY = new ArrayList();
+}
+
+Entry currentEntry = new Entry();
+
+ArrayList pastEntries = new ArrayList();
+
 void setup() {
 
   ellipseMode(CENTER);
@@ -74,6 +84,7 @@ void setup() {
 
 void draw() {
   
+
 
 
     if (mousePressed) {
@@ -122,7 +133,7 @@ void mousePressed() {
       winCount = 3;
       showTBox();
     }
-  } else if (winCount == 3) {  
+  } else if (winCount == 3) {
     pastEntries.add(currentEntry);
     doReset();
   }
@@ -310,7 +321,7 @@ void showHistory()
   fill(0,0,0);
   textSize(50);
   text("PAIN APPS", (okX+okWidth/2)+570, (okY+okHeight/2)-50);
-  
+ 
   fill(0, 191, 255);
   rect(okX+668, okY+65, okWidth/1.5, okHeight/1.5);
 
@@ -339,4 +350,3 @@ boolean onCancelButton() {
   }
   return false;
 }
-
