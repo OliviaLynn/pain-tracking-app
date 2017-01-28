@@ -2,10 +2,10 @@
 int clickX, clickY, x0, y0, winCount;
 boolean tbox;
 PImage img;
+PImage history;
 color defaultPainColor, painColor, white1;
 color[] currentPainColor = new color[10]; //color array
 int painLevel = -1;
-int painType = -1;
 boolean startedDrawing, inDrawingMode;
 ArrayList linesX = new ArrayList();
 ArrayList linesY = new ArrayList();
@@ -25,20 +25,28 @@ int cancelY = 170;
 int cancelWidth = 150; //used to be 100x100
 int cancelHeight = 150;
 
-
 void setup() {
+  
+  ellipseMode(CENTER);
+  textAlign(CENTER, CENTER);
+  
   size(800, 1200);
+  
+  frame.setTitle("Pain Apps");
   winCount = 0;
   img = loadImage("edit-figure.jpg");
   image(img, 0, 0);
+ 
+
+  
+  showTitleLabel(); //displays title
+  showHistory(); //show history button
+  
   defaultPainColor = color(230, 80, 0);
   painColor = defaultPainColor;
   white1 = color(255,240,255);
   startedDrawing = false;
   inDrawingMode = false;
-
-  ellipseMode(CENTER);
-  textAlign(CENTER, CENTER);
   
   tbox = false;
   
@@ -49,10 +57,11 @@ void setup() {
   btnWidth = tBoxWidth/5;
   btnHeight = btnWidth;
   btnY = tBoxY + 200;
-  
+
 }
 
 void draw() {
+  
 
     if (mousePressed) {
       if (!tbox && !onCancelButton() && !onOkButton()){
@@ -66,6 +75,7 @@ void draw() {
   if (inDrawingMode) {
     showCancelButton();
     showOkButton();
+ 
   }
   
 }
@@ -88,37 +98,19 @@ void mousePressed() {
     tbox = true;
     showTBox();
   } else if (winCount == 1) {
-    painLevel = getScaleButtonX();
+    painLevel = getScaleButton();
     if (painLevel > -1) {
       winCount = 2;
       showTBox();
     }
-  } else if (winCount == 2) {
-    painType = getScaleButtonY();
-    if (painType > -1) {
-      println("Pain Type: " + painType); // checks something happened delete in final draft
-      winCount = 3;
-      showTBox();
-    }
-  } else if (winCount == 3) {  
-    painType = getScaleButtonY();
-    if (painType > -1) {
-      println("Pattern: " + painType); // checks something happened delete in final draft
-    }
+  } else if (winCount == 2) {  
     doReset();
   }
 }
 
-int getScaleButtonX() {
+int getScaleButton() {
   if (tBoxX < mouseX && mouseX < tBoxX + tBoxWidth) {
     return 1 + (mouseX - tBoxX)/(btnWidth);
-  }
-  return -1;
-} 
-
-int getScaleButtonY() {
-  if (tBoxY < mouseY && mouseY < tBoxY + tBoxHeight) {
-    return 1 + (mouseY - tBoxY)/(btnHeight);
   }
   return -1;
 } 
@@ -140,55 +132,23 @@ void showWindowOne() {
   fill(100,100,150);
   noStroke();
   textSize(32);
-  text("How strong is your pain?", tBoxX + tBoxWidth/2, tBoxY + 100);
+  text("How bad is your pain?", tBoxX + tBoxWidth/2, tBoxY + 100);
   for (int i = 0; i < 5; i++) {
     makeWindowOneButton(i);
   }
 }
 
-void makeWindowTwoButton(int i) {
-   //fill(colorScale(i));
+void showWindowTwo() {
+  fill(100,100,150);
+  textSize(32);
+  text("What does it feel like?", tBoxX + tBoxWidth/2, tBoxY + 100);
+  for (int i = 0; i < 5; i++) {
+    noStroke();
    fill(color(100 + i*40,100 + i*15,100));
-   rect(tBoxX + 40, tBoxY + i*50 + 150, tBoxWidth-80, 40); // Vertically positioned by incrementing start point
-   fill(0);
+   rect(tBoxX + 40, tBoxY + i*50 + 150, tBoxWidth-80, 40);
+   fill(0,0,255);
    textSize(12);
    text(i, tBoxX + 10, tBoxY + i*50 + 170);
-}
-
-void showWindowTwo() {
-  //int offsetY;
-  fill(100,100,150);
-  noStroke();
-  textSize(32);
-  text("What does your pain feel like?", tBoxX + tBoxWidth/2, tBoxY + 100); // Question 2
-  for (int i = 0; i < 5; i++) {
-    makeWindowTwoButton(i);
-  }
-}
-
-
-void makeWindowThreeButton(int i, String ansQ3) {
-   //fill(colorScale(i));
-   fill(color(100 + i*40,100 + i*15,100));
-   rect(tBoxX + 40, tBoxY + i*90 + 160, tBoxWidth-80, 75); // Vertically positioned by incrementing start point
-   fill(0);
-   textSize(20);
-   text(ansQ3, tBoxX + 220, tBoxY + i*90 + 190);
-}
-   
-
-void showWindowThree() {
-  String [] patternA = new String [3]; // Array of responses to display in each button
-  patternA[0] = "Continuous, steady, constant";
-  patternA[1] = "Rhythmic, periodic, intermittent";
-  patternA[2] = "Brief, momentary, transient";
-  
-  fill(100,100,150);
-  noStroke();  
-  textSize(32);
-  text("How would you describe the \n pattern of your pain?", tBoxX + tBoxWidth/2, tBoxY + 100); // Question 3
-  for (int i = 0; i < 3; i++) { // Makes 3 buttons
-   makeWindowThreeButton(i, patternA[i]);
   }
 }
 
@@ -201,8 +161,6 @@ void showTBox() { //displays popup window
     showWindowOne();
   } else if (winCount == 2) { //question 2
     showWindowTwo();
-  } else if (winCount == 3) { // question 3
-    showWindowThree();
   }
 }
 
@@ -243,6 +201,7 @@ void doReset() {
     tbox = false;
     winCount = 0;
     image(img, 0, 0);
+    showTitleLabel();
     painColor = colorScale(painLevel - 1);
     redrawPainArea();
 }
@@ -275,8 +234,29 @@ void showOkButton() {
 //new method to display title
 void showTitleLabel()
 {
+  //noStroke();
+  //fill(255, 255, 255);
+  //rect(okX+600, okY, okWidth, okHeight);
+  fill(0,0,0);
+  textSize(50);
+  text("PAIN APPS", (okX+okWidth/2)+570, (okY+okHeight/2)-50);
+  
+}
+
+void showHistory()
+{
   noStroke();
+  fill(0, 191, 255);
+  rect(okX+668, okY+65, okWidth/1.5, okHeight/1.5);
+  
+     history = loadImage("history.png");
+   history.resize(90,90);
+  image(history, 683, 80);
+  
   fill(255,255,255);
+  //textSize(35);
+  //text("History", (okX+okWidth/2)+600, (okY+okHeight/2)+25);
+  
   
   
 }
