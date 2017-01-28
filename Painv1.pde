@@ -187,7 +187,11 @@ void showMedBox() { //displays popup window
   fill(100,100,150);
   noStroke();
   textSize(22);
-  text("Enter medication(s) and time below:", tBoxX + tBoxWidth/2, tBoxY + 100);
+  text("MEDICATION HISTORY \n", tBoxX + tBoxWidth/2, tBoxY + 100);
+  textSize(18);
+  text("Acetominophen", tBoxX + tBoxWidth/2, tBoxY + 120);
+  text("Aspirin", tBoxX + tBoxWidth/2, tBoxY + 150);
+   text("Ibuprofen", tBoxX + tBoxWidth/2, tBoxY + 180);
   
   
 }
