@@ -4,7 +4,8 @@ boolean tbox;
 PImage img;
 PImage history;
 color defaultPainColor, painColor, white1;
-color[] currentPainColor = new color[10]; //color array
+color[] currentPainColor = {#fea3aa, #f8b88b, #baed91, #b2cefe, #f2a2e8}; //color array
+
 int painLevel = -1;
 boolean startedDrawing, inDrawingMode;
 ArrayList linesX = new ArrayList();
@@ -21,7 +22,7 @@ String medTime;
 
 int tBoxX, tBoxY, tBoxWidth, tBoxHeight;
 
-int btnWidth, btnHeight, btnY; 
+int btnWidth, btnHeight, btnY;
 int medX, medY, medWidth;
 int statY;
 
@@ -39,53 +40,53 @@ int ellsize = 40;
 int ellinc = 1;
 
 void setup() {
-  
+
   ellipseMode(CENTER);
   textAlign(CENTER, CENTER);
     //size(800, 1200);
     size(1050, 1650);
-  
+
   frame.setTitle("Pain Apps");
   winCount = 0;
   img = loadImage("figure.jpg");
   image(img, 0, 0);
- 
 
-  
+
+
   defaultPainColor = color(230, 80, 0);
   painColor = defaultPainColor;
   white1 = color(255,240,255);
   startedDrawing = false;
   inDrawingMode = false;
-  
+
   tbox = false;
-  
+
   tBoxX = width/2 - 225;
   tBoxY = height/2 - 300;
   tBoxWidth = 450;
   tBoxHeight = 450;
   btnWidth = tBoxWidth/5;
   btnHeight = btnWidth;
-  btnY = tBoxY + 200;  
+  btnY = tBoxY + 200;
   stroke(100);
   smooth();
   medX = width - 130;
   medY = 220;
   medWidth = 110;
   statY = 100;
-  
+
   historyPointsX = new int[]{40, 40, 90, 40, 20, 100, 60, 50, 50, 70, 100, 30, 10, 10, 40, 10};
   historyPointsY = new int[]{50, -10, 10, 30, -80, 10, 40, -40, -60, 40, 160, -80, 20, 70, -20, -90};
 
-  
+
   showTitleLabel(); //displays title
   showHistory(); //show history button
   showMed(); //show medication button
-  
+
 }
 
 void draw() {
-  
+
   if (inHistory) {
       showHistoryPage();
   }
@@ -93,6 +94,7 @@ void draw() {
     if (mousePressed) {
       if (!tbox && !onCancelButton() && !onOkButton()){
           //drawLines();
+          noStroke();
           fill(painColor);
           ellipse(pmouseX, pmouseY, ellsize, ellsize);
           inDrawingMode = true;
@@ -104,16 +106,16 @@ void draw() {
     } else if (ellsize < 20) {
       ellinc++;
     }
-  
+
   if (inDrawingMode) {
     showCancelButton();
     showOkButton();
     showHistory();
     showMed();
- 
+
   }
   }
-  
+
 }
 
 void keyPressed() {
@@ -130,11 +132,11 @@ void mousePressed() {
       doCancel();
       doReset();
   } else if (onOkButton()){
-    winCount = 1;  
+    winCount = 1;
     tbox = true;
     showTBox();
-  } 
-  
+  }
+
   else if(onMed())
   {
     winCount = 1;
@@ -145,10 +147,10 @@ void mousePressed() {
       winCount = 2;
       showTBox();
     }
-  } else if (winCount == 2) {  
+  } else if (winCount == 2) {
     doReset();
   }
-  
+
   else if (onHistory()) {
     inHistory = true;
   }
@@ -158,7 +160,7 @@ void mousePressed() {
   }
 }
 
-  
+
 void graphPlotLines(int gX, int gY, int gWidth, int gHeight) {
   strokeWeight(3);
 
@@ -234,14 +236,14 @@ int getScaleButton() {
     return 1 + (mouseX - tBoxX)/(btnWidth);
   }
   return -1;
-} 
+}
 
 color colorScale(int i) {
   return color(100 + i*40,100 + i*15,100);
 }
 
 void makeWindowOneButton(int i) {
-   fill(colorScale(i));
+   fill(currentPainColor[i]);
    rect(tBoxX + i*btnWidth, btnY, btnWidth, btnHeight);
    fill(0,0,0);
    textSize(36);
@@ -259,9 +261,9 @@ void showWindowOne() {
   }
 }
 void makeWindowTwoButton(int i, String s) {
-  
+
    //fill(colorScale(i));
-   fill(color(100 + i*40,100 + i*15,100));
+   fill(currentPainColor[i]);
    rect(tBoxX + 40, tBoxY + i*50 + 150, tBoxWidth-80, 40); // Vertically positioned by incrementing start point
    fill(255,255,255);
    textSize(18);
@@ -275,7 +277,7 @@ void showWindowTwo() {
   typeA[2] = "Cramping";
   typeA[3] = "Tiring";
   typeA[4] = "Numb";
-  
+
   //int offsetY;
   fill(100,100,150);
   textSize(32);
@@ -314,7 +316,7 @@ void showMedBox() { //displays popup window
   strokeWeight(3);
   fill(#ffffff);
   rect(tBoxX, tBoxY, tBoxWidth, tBoxHeight);
-  
+
   int offsetY;
   fill(100,100,150);
   noStroke();
@@ -324,8 +326,8 @@ void showMedBox() { //displays popup window
   text("Acetominophen", tBoxX + tBoxWidth/2, tBoxY + 120);
   text("Aspirin", tBoxX + tBoxWidth/2, tBoxY + 150);
    text("Ibuprofen", tBoxX + tBoxWidth/2, tBoxY + 180);
-  
-  
+
+
 }
 
 void drawLines() {
@@ -343,9 +345,9 @@ void drawLines() {
 }
 
 void redrawPainArea() {
-  if (linesX.size() == 0) { 
+  if (linesX.size() == 0) {
     print("none");
-    return; 
+    return;
   }
   stroke(painColor);
   strokeWeight(15);
@@ -377,8 +379,10 @@ void doCancel() {
 }
 
 void showCancelButton() {
-  noStroke();
-  fill(255, 204, 153); //before: fill(100,100,100) (for gray color)
+  stroke(100,100,150);
+  strokeWeight(3);
+  //noStroke();
+  fill(#f8b88b); //before: fill(100,100,100) (for gray color)
   rect(cancelX, cancelY, cancelWidth, cancelHeight);
   fill(255,255,255);
   //textSize(72);
@@ -387,8 +391,10 @@ void showCancelButton() {
 }
 
 void showOkButton() {
-  noStroke();
-  fill(255, 153, 153);
+  //noStroke();
+  stroke(100,100,150);
+  strokeWeight(3);
+  fill(#fea3aa);
   rect(okX, okY, okWidth, okHeight);
   fill(255,255,255);
   textSize(136);
@@ -404,15 +410,16 @@ void showTitleLabel()
   fill(0,0,0);
   textSize(50);
   text("PAIN APPS", width - 140, 40);
-  
+
 }
 
 void showHistory()
 {
   noStroke();
-  fill(179, 255, 153);
+  //fill(179, 255, 153);
+  fill(#baed91);
   rect(medX, statY, medWidth, 110);
-  
+
   fill(255,255,255);
   textSize(30);
   text("STATS", medX+50, 150);
@@ -422,10 +429,9 @@ void showHistory()
 void showMed()
 {
   noStroke();
-  fill(153, 230, 255);
-  if (medX > 0) {
+  //fill(153, 230, 255);
+  fill(#b2cefe);
   rect(medX, medY, 110, 110);
-  }
   fill(255,255,255);
   textSize(35);
   text("MEDS", medX+50, 270);
