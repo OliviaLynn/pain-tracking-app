@@ -24,7 +24,6 @@ int cancelY = 170;
 int cancelWidth = 150; //used to be 100x100
 int cancelHeight = 150;
 
-
 void setup() {
   size(800, 1200);
   winCount = 0;
@@ -52,6 +51,7 @@ void setup() {
 }
 
 void draw() {
+  
 
     if (mousePressed) {
       if (!tbox && !onCancelButton() && !onOkButton()){
@@ -65,6 +65,7 @@ void draw() {
   if (inDrawingMode) {
     showCancelButton();
     showOkButton();
+    showTitleLabel();
   }
   
 }
@@ -250,8 +251,11 @@ void showOkButton() {
 void showTitleLabel()
 {
   noStroke();
-  fill(255,255,255);
-  
+  fill(255, 255, 255);
+  rect(okX+600, okY, okWidth, okHeight);
+  fill(0,0,0);
+  textSize(50);
+  text("PAIN APPS", (okX+okWidth/2)+570, (okY+okHeight/2)-50);
   
 }
 
