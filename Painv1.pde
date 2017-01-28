@@ -4,7 +4,8 @@ boolean tbox;
 PImage img;
 PImage history;
 color defaultPainColor, painColor, white1;
-color[] currentPainColor = new color[10]; //color array
+color[] currentPainColor = {#fea3aa, #f8b88b, #baed91, #b2cefe, #f2a2e8}; //color array
+
 int painLevel = -1;
 boolean startedDrawing, inDrawingMode;
 ArrayList linesX = new ArrayList();
@@ -74,6 +75,7 @@ void draw() {
     if (mousePressed) {
       if (!tbox && !onCancelButton() && !onOkButton()){
           //drawLines();
+          noStroke();
           fill(painColor);
           ellipse(pmouseX, pmouseY, ellsize, ellsize);
           inDrawingMode = true;
@@ -142,7 +144,7 @@ color colorScale(int i) {
 }
 
 void makeWindowOneButton(int i) {
-   fill(colorScale(i));
+   fill(currentPainColor[i]);
    rect(tBoxX + i*btnWidth, btnY, btnWidth, btnHeight);
    fill(0,0,0);
    textSize(36);
@@ -162,7 +164,7 @@ void showWindowOne() {
 void makeWindowTwoButton(int i, String s) {
   
    //fill(colorScale(i));
-   fill(color(100 + i*40,100 + i*15,100));
+   fill(currentPainColor[i]);
    rect(tBoxX + 40, tBoxY + i*50 + 150, tBoxWidth-80, 40); // Vertically positioned by incrementing start point
    fill(255,255,255);
    textSize(18);
@@ -278,8 +280,10 @@ void doCancel() {
 }
 
 void showCancelButton() {
-  noStroke();
-  fill(255, 204, 153); //before: fill(100,100,100) (for gray color)
+  stroke(100,100,150);
+  strokeWeight(3);
+  //noStroke();
+  fill(#f8b88b); //before: fill(100,100,100) (for gray color)
   rect(cancelX, cancelY, cancelWidth, cancelHeight);
   fill(255,255,255);
   //textSize(72);
@@ -288,8 +292,10 @@ void showCancelButton() {
 }
 
 void showOkButton() {
-  noStroke();
-  fill(255, 153, 153);
+  //noStroke();
+  stroke(100,100,150);
+  strokeWeight(3);
+  fill(#fea3aa);
   rect(okX, okY, okWidth, okHeight);
   fill(255,255,255);
   textSize(136);
@@ -310,8 +316,10 @@ void showTitleLabel()
 
 void showHistory()
 {
-  noStroke();
-  fill(179, 255, 153);
+  stroke(100,100,150);
+  strokeWeight(3);
+  //noStroke();
+  fill(#baed91);
   rect(okX+668, okY+65, okWidth/1.5, okHeight/1.5);
   
   fill(255,255,255);
@@ -321,8 +329,10 @@ void showHistory()
 
 void showMed()
 {
-  noStroke();
-  fill(153, 230, 255);
+  stroke(100,100,150);
+  strokeWeight(3);
+  //noStroke();
+  fill(#b2cefe);
   rect(okX+668, okY+175, okWidth/1.5, okHeight/1.5);
   fill(255,255,255);
   textSize(35);
