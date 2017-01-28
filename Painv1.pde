@@ -29,14 +29,12 @@ int cancelY = 170;
 int cancelWidth = 150; //used to be 100x100
 int cancelHeight = 150;
 
-int ellsize = 40;
-int ellinc = 1;
-
 void setup() {
   
   ellipseMode(CENTER);
   textAlign(CENTER, CENTER);
-    size(800, 1200);
+  
+  size(800, 1200);
   
   frame.setTitle("Pain Apps");
   winCount = 0;
@@ -63,9 +61,8 @@ void setup() {
   tBoxHeight = 450;
   btnWidth = tBoxWidth/5;
   btnHeight = btnWidth;
-  btnY = tBoxY + 200;  
-  stroke(100);
-  smooth();
+  btnY = tBoxY + 200;
+
 }
 
 void draw() {
@@ -73,17 +70,11 @@ void draw() {
 
     if (mousePressed) {
       if (!tbox && !onCancelButton() && !onOkButton()){
-          //drawLines();
-          fill(painColor);
-          ellipse(pmouseX, pmouseY, ellsize, ellsize);
-          inDrawingMode = true;
+          drawLines();
         }
     }
-    ellsize = ellsize + ellinc;
-    if(ellsize > 60) {
-      ellinc--;
-    } else if (ellsize < 20) {
-      ellinc++;
+    else { 
+      startedDrawing = false; //When the user stops drawing, this resets
     }
   
   if (inDrawingMode) {
@@ -159,36 +150,12 @@ void showWindowOne() {
     makeWindowOneButton(i);
   }
 }
-void makeWindowTwoButton(int i, String s) {
-  
-   //fill(colorScale(i));
-   fill(color(100 + i*40,100 + i*15,100));
-   rect(tBoxX + 40, tBoxY + i*50 + 150, tBoxWidth-80, 40); // Vertically positioned by incrementing start point
-   fill(0);
-   textSize(12);
-   text(s, tBoxX + 10, tBoxY + i*50 + 170);
-}
 
 void showWindowTwo() {
-  String [] typeA = new String [5]; // Array of responses to display in each button
-  typeA[0] = "Hot";
-  typeA[1] = "Sharp";
-  typeA[2] = "Cramping";
-  typeA[3] = "Tiring";
-  typeA[4] = "Numb";
-  
-  //int offsetY;
   fill(100,100,150);
   textSize(32);
   text("What does it feel like?", tBoxX + tBoxWidth/2, tBoxY + 100);
   for (int i = 0; i < 5; i++) {
-    makeWindowTwoButton(i, typeA[i]);
-  }
-}
-
-
-void makeWindowThreeButton(int i, String ansQ3) {
-   //fill(colorScale(i));
     noStroke();
    fill(color(100 + i*40,100 + i*15,100));
    rect(tBoxX + 40, tBoxY + i*50 + 150, tBoxWidth-80, 40);
@@ -196,6 +163,7 @@ void makeWindowThreeButton(int i, String ansQ3) {
    textSize(20);
    text(painTerms[i], tBoxX + 225, tBoxY + i*50 + 170);
   }
+}
 
 void showTBox() { //displays popup window
   stroke(100,100,150);
@@ -208,7 +176,6 @@ void showTBox() { //displays popup window
     showWindowTwo();
   }
 }
-
 
 void showMedBox() { //displays popup window
   stroke(100,100,150);
