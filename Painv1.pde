@@ -2,6 +2,7 @@
 int clickX, clickY, x0, y0, winCount;
 boolean tbox;
 PImage img;
+PImage history;
 color defaultPainColor, painColor, white1;
 color[] currentPainColor = new color[10]; //color array
 int painLevel = -1;
@@ -25,18 +26,27 @@ int cancelWidth = 150; //used to be 100x100
 int cancelHeight = 150;
 
 void setup() {
+  
+  ellipseMode(CENTER);
+  textAlign(CENTER, CENTER);
+  
   size(800, 1200);
+  
+  frame.setTitle("Pain Apps");
   winCount = 0;
   img = loadImage("edit-figure.jpg");
   image(img, 0, 0);
+ 
+
+  
+  showTitleLabel(); //displays title
+  showHistory(); //show history button
+  
   defaultPainColor = color(230, 80, 0);
   painColor = defaultPainColor;
   white1 = color(255,240,255);
   startedDrawing = false;
   inDrawingMode = false;
-
-  ellipseMode(CENTER);
-  textAlign(CENTER, CENTER);
   
   tbox = false;
   
@@ -65,7 +75,7 @@ void draw() {
   if (inDrawingMode) {
     showCancelButton();
     showOkButton();
-    showTitleLabel();
+ 
   }
   
 }
@@ -191,6 +201,7 @@ void doReset() {
     tbox = false;
     winCount = 0;
     image(img, 0, 0);
+    showTitleLabel();
     painColor = colorScale(painLevel - 1);
     redrawPainArea();
 }
@@ -223,12 +234,30 @@ void showOkButton() {
 //new method to display title
 void showTitleLabel()
 {
-  noStroke();
-  fill(255, 255, 255);
-  rect(okX+600, okY, okWidth, okHeight);
+  //noStroke();
+  //fill(255, 255, 255);
+  //rect(okX+600, okY, okWidth, okHeight);
   fill(0,0,0);
   textSize(50);
   text("PAIN APPS", (okX+okWidth/2)+570, (okY+okHeight/2)-50);
+  
+}
+
+void showHistory()
+{
+  noStroke();
+  fill(0, 191, 255);
+  rect(okX+668, okY+65, okWidth/1.5, okHeight/1.5);
+  
+     history = loadImage("history.png");
+   history.resize(90,90);
+  image(history, 683, 80);
+  
+  fill(255,255,255);
+  //textSize(35);
+  //text("History", (okX+okWidth/2)+600, (okY+okHeight/2)+25);
+  
+  
   
 }
 
