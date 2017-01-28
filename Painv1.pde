@@ -3,6 +3,7 @@ int clickX, clickY, x0, y0, winCount;
 boolean tbox;
 PImage img;
 color defaultPainColor, painColor, white1;
+color[] currentPainColor = new color[10]; //color array
 int painLevel = -1;
 boolean startedDrawing, inDrawingMode;
 ArrayList linesX = new ArrayList();
@@ -20,8 +21,8 @@ int okHeight = 150;
 
 int cancelX = 10;
 int cancelY = 170;
-int cancelWidth = 100;
-int cancelHeight = 100;
+int cancelWidth = 150; //used to be 100x100
+int cancelHeight = 150;
 
 
 void setup() {
@@ -201,10 +202,11 @@ void doCancel() {
 
 void showCancelButton() {
   noStroke();
-  fill(100, 100, 100);
+  fill(255, 0, 0 ); //before: fill(100,100,100) (for gray color)
   rect(cancelX, cancelY, cancelWidth, cancelHeight);
   fill(255,255,255);
-  textSize(72);
+  //textSize(72);
+  textSize(105);
   text("\u2718", cancelX+cancelWidth/2, cancelY+cancelHeight/2-8);
 }
 
@@ -215,6 +217,15 @@ void showOkButton() {
   fill(255,255,255);
   textSize(136);
   text("\u2713", okX+okWidth/2, okY+okHeight/2-8);
+}
+
+//new method to display title
+void showTitleLabel()
+{
+  noStroke();
+  fill(255,255,255);
+  
+  
 }
 
 boolean onOkButton() {
