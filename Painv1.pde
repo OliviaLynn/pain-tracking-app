@@ -11,6 +11,10 @@ ArrayList linesX = new ArrayList();
 ArrayList linesY = new ArrayList();
 boolean reset, redraw;
 
+String [] painTerms = {"flickering", "quivering", "pulsing", "throbbing", "beating" };
+String userMed;
+String medTime;
+
 int tBoxX, tBoxY, tBoxWidth, tBoxHeight;
 
 int btnWidth, btnHeight, btnY; 
@@ -41,6 +45,7 @@ void setup() {
   
   showTitleLabel(); //displays title
   showHistory(); //show history button
+  showMed(); //show medication button
   
   defaultPainColor = color(230, 80, 0);
   painColor = defaultPainColor;
@@ -50,7 +55,7 @@ void setup() {
   
   tbox = false;
   
-  tBoxX = width/2 - 200;
+  tBoxX = width/2 - 225;
   tBoxY = height/2 - 300;
   tBoxWidth = 450;
   tBoxHeight = 450;
@@ -75,6 +80,8 @@ void draw() {
   if (inDrawingMode) {
     showCancelButton();
     showOkButton();
+    showHistory();
+    showMed();
  
   }
   
@@ -97,6 +104,12 @@ void mousePressed() {
     winCount = 1;  
     tbox = true;
     showTBox();
+  } 
+  
+  else if(onMed())
+  {
+    winCount = 1;
+    showMedBox();
   } else if (winCount == 1) {
     painLevel = getScaleButton();
     if (painLevel > -1) {
@@ -146,9 +159,9 @@ void showWindowTwo() {
     noStroke();
    fill(color(100 + i*40,100 + i*15,100));
    rect(tBoxX + 40, tBoxY + i*50 + 150, tBoxWidth-80, 40);
-   fill(0,0,255);
-   textSize(12);
-   text(i, tBoxX + 10, tBoxY + i*50 + 170);
+   fill(255,255,255);
+   textSize(20);
+   text(painTerms[i], tBoxX + 225, tBoxY + i*50 + 170);
   }
 }
 
@@ -162,6 +175,21 @@ void showTBox() { //displays popup window
   } else if (winCount == 2) { //question 2
     showWindowTwo();
   }
+}
+
+void showMedBox() { //displays popup window
+  stroke(100,100,150);
+  strokeWeight(3);
+  fill(#ffffff);
+  rect(tBoxX, tBoxY, tBoxWidth, tBoxHeight);
+  
+  int offsetY;
+  fill(100,100,150);
+  noStroke();
+  textSize(22);
+  text("Enter medication(s) and time below:", tBoxX + tBoxWidth/2, tBoxY + 100);
+  
+  
 }
 
 void drawLines() {
@@ -214,7 +242,7 @@ void doCancel() {
 
 void showCancelButton() {
   noStroke();
-  fill(255, 0, 0 ); //before: fill(100,100,100) (for gray color)
+  fill(255, 204, 153); //before: fill(100,100,100) (for gray color)
   rect(cancelX, cancelY, cancelWidth, cancelHeight);
   fill(255,255,255);
   //textSize(72);
@@ -224,7 +252,7 @@ void showCancelButton() {
 
 void showOkButton() {
   noStroke();
-  fill(160, 200, 100);
+  fill(255, 153, 153);
   rect(okX, okY, okWidth, okHeight);
   fill(255,255,255);
   textSize(136);
@@ -246,20 +274,24 @@ void showTitleLabel()
 void showHistory()
 {
   noStroke();
-  fill(0, 191, 255);
+  fill(179, 255, 153);
   rect(okX+668, okY+65, okWidth/1.5, okHeight/1.5);
   
-     history = loadImage("history.png");
-   history.resize(90,90);
-  image(history, 683, 80);
-  
   fill(255,255,255);
-  //textSize(35);
-  //text("History", (okX+okWidth/2)+600, (okY+okHeight/2)+25);
-  
-  
-  
+  textSize(30);
+  text("STATS", (okX+okWidth/2)+643, (okY+okHeight/2)+35);
 }
+
+void showMed()
+{
+  noStroke();
+  fill(153, 230, 255);
+  rect(okX+668, okY+175, okWidth/1.5, okHeight/1.5);
+  fill(255,255,255);
+  textSize(35);
+  text("MEDS", (okX+okWidth/2)+643, (okY+okHeight/2)+145);
+}
+
 
 boolean onOkButton() {
   if (inDrawingMode && okX < mouseX && mouseX < okX+okWidth && okY < mouseY && mouseY < okY+okHeight) {
@@ -270,6 +302,15 @@ boolean onOkButton() {
 
 boolean onCancelButton() {
   if (inDrawingMode && cancelX < mouseX && mouseX < cancelX+cancelWidth && cancelY < mouseY && mouseY < cancelY+cancelHeight) {
+    return true;
+  }
+  return false;
+}
+
+boolean onMed()
+{
+  if(inDrawingMode && okX+668 < mouseX && mouseX < (okX+668)+(okWidth/1.5) && okY+175 < mouseY && mouseY < (okY+175)+(okHeight/1.5))
+  {
     return true;
   }
   return false;
