@@ -243,6 +243,9 @@ color colorScale(int i) {
 }
 
 void makeWindowOneButton(int i) {
+  
+  stroke(100,100,150);
+  strokeWeight(2);
    fill(currentPainColor[i]);
    rect(tBoxX + i*btnWidth, btnY, btnWidth, btnHeight);
    fill(0,0,0);
@@ -379,9 +382,7 @@ void doCancel() {
 }
 
 void showCancelButton() {
-  stroke(100,100,150);
-  strokeWeight(3);
-  //noStroke();
+  noStroke();
   fill(#f8b88b); //before: fill(100,100,100) (for gray color)
   rect(cancelX, cancelY, cancelWidth, cancelHeight);
   fill(255,255,255);
@@ -391,9 +392,7 @@ void showCancelButton() {
 }
 
 void showOkButton() {
-  //noStroke();
-  stroke(100,100,150);
-  strokeWeight(3);
+  noStroke();
   fill(#fea3aa);
   rect(okX, okY, okWidth, okHeight);
   fill(255,255,255);
