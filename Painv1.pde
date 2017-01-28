@@ -2,6 +2,7 @@
 int clickX, clickY, x0, y0, winCount;
 boolean tbox;
 PImage img;
+PImage history;
 color defaultPainColor, painColor, white1;
 color[] currentPainColor = new color[10]; //color array
 int painLevel = -1;
@@ -13,7 +14,7 @@ boolean reset, redraw;
 
 int tBoxX, tBoxY, tBoxWidth, tBoxHeight;
 
-int btnWidth, btnHeight, btnY; 
+int btnWidth, btnHeight, btnY;
 
 int okX = 10;
 int okY = 10;
@@ -24,6 +25,7 @@ int cancelX = 10;
 int cancelY = 170;
 int cancelWidth = 150; //used to be 100x100
 int cancelHeight = 150;
+
 
 class Entry {
   int painLevel = -1;
@@ -36,21 +38,30 @@ Entry currentEntry = new Entry();
 ArrayList pastEntries = new ArrayList();
 
 void setup() {
+
+  ellipseMode(CENTER);
+  textAlign(CENTER, CENTER);
+
   size(800, 1200);
+
+  frame.setTitle("Pain Apps");
   winCount = 0;
   img = loadImage("edit-figure.jpg");
   image(img, 0, 0);
+
+
+
+  showTitleLabel(); //displays title
+  showHistory(); //show history button
+
   defaultPainColor = color(230, 80, 0);
   painColor = defaultPainColor;
   white1 = color(255,240,255);
   startedDrawing = false;
   inDrawingMode = false;
 
-  ellipseMode(CENTER);
-  textAlign(CENTER, CENTER);
-  
   tbox = false;
-  
+
   tBoxX = width/2 - 225;
   tBoxY = height/2 - 300;
   tBoxWidth = 450;
@@ -64,20 +75,22 @@ void setup() {
 
 void draw() {
 
+
     if (mousePressed) {
       if (!tbox && !onCancelButton() && !onOkButton()){
           drawLines();
         }
     }
-    else { 
+    else {
       startedDrawing = false; //When the user stops drawing, this resets
     }
-  
+
   if (inDrawingMode) {
     showCancelButton();
     showOkButton();
+
   }
-  
+
 }
 
 void keyPressed() {
@@ -94,7 +107,7 @@ void mousePressed() {
       doCancel();
       doReset();
   } else if (onOkButton()){
-    winCount = 1;  
+    winCount = 1;
     tbox = true;
     showTBox();
   } else if (winCount == 1) {
@@ -103,7 +116,7 @@ void mousePressed() {
       winCount = 2;
       showTBox();
     }
-  } else if (winCount == 2) {  
+  } else if (winCount == 2) {
     pastEntries.add(currentEntry);
     doReset();
   }
@@ -112,12 +125,12 @@ void mousePressed() {
 int getScaleButton() {
   if (tBoxX < mouseX && mouseX < tBoxX + tBoxWidth) {
     //Find how far from the left of the tbox the mouse is, then divide that by the button width
-    //to figure out what button it must be in. The 1 is added because we made the scale 1 - 5, and 
+    //to figure out what button it must be in. The 1 is added because we made the scale 1 - 5, and
     //naturally Java starts the indices at 0 and ends at 4
     return 1 + (mouseX - tBoxX)/(btnWidth);
   }
   return -1;
-} 
+}
 
 color colorScale(int i) {
   if (i == -1) {
@@ -197,9 +210,9 @@ void redrawPainArea() {
 }
 
 void redrawSingleEntry(Entry e) {
-  if (e.linesX.size() == 0) { 
+  if (e.linesX.size() == 0) {
     print("none");
-    return; 
+    return;
   }
   stroke(colorScale(e.painLevel));
   strokeWeight(15);
@@ -220,6 +233,7 @@ void doReset() {
     startedDrawing = false;
     winCount = 0;
     image(img, 0, 0);
+    showTitleLabel();
     painColor = colorScale(painLevel - 1);
     redrawPainArea();
 }
@@ -252,10 +266,31 @@ void showOkButton() {
 //new method to display title
 void showTitleLabel()
 {
+  //noStroke();
+  //fill(255, 255, 255);
+  //rect(okX+600, okY, okWidth, okHeight);
+  fill(0,0,0);
+  textSize(50);
+  text("PAIN APPS", (okX+okWidth/2)+570, (okY+okHeight/2)-50);
+
+}
+
+void showHistory()
+{
   noStroke();
+  fill(0, 191, 255);
+  rect(okX+668, okY+65, okWidth/1.5, okHeight/1.5);
+
+     history = loadImage("history.png");
+   history.resize(90,90);
+  image(history, 683, 80);
+
   fill(255,255,255);
-  
-  
+  //textSize(35);
+  //text("History", (okX+okWidth/2)+600, (okY+okHeight/2)+25);
+
+
+
 }
 
 boolean onOkButton() {
