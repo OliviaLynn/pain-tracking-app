@@ -92,7 +92,13 @@ void mousePressed() {
       winCount = 2;
       showTBox();
     }
-  } else if (winCount == 2) {  
+  } else if (winCount == 2) {
+    painLevel = getScaleButton();
+    if (painLevel > -1) {
+      winCount = 3;
+      showTBox();
+    }
+  } else if (winCount == 3) {  
     doReset();
   }
 }
@@ -121,7 +127,7 @@ void showWindowOne() {
   fill(100,100,150);
   noStroke();
   textSize(32);
-  text("How bad is your pain?", tBoxX + tBoxWidth/2, tBoxY + 100);
+  text("How strong is your pain?", tBoxX + tBoxWidth/2, tBoxY + 100);
   for (int i = 0; i < 5; i++) {
     makeWindowOneButton(i);
   }
@@ -130,7 +136,7 @@ void showWindowOne() {
 void showWindowTwo() {
   fill(100,100,150);
   textSize(32);
-  text("What does it feel like?", tBoxX + tBoxWidth/2, tBoxY + 100);
+  text("What does your pain feel like?", tBoxX + tBoxWidth/2, tBoxY + 100);
   for (int i = 0; i < 5; i++) {
     noStroke();
    fill(color(100 + i*40,100 + i*15,100));
@@ -138,6 +144,25 @@ void showWindowTwo() {
    fill(0,0,255);
    textSize(12);
    text(i, tBoxX + 10, tBoxY + i*50 + 170);
+  }
+}
+
+void showWindowThree() {
+  String [] patternA = new String [3];
+  patternA[0] = "Continuous, steady, constant";
+  patternA[1] = "Rhythmic, periodic, intermittent";
+  patterna[2] = "Brief, momentary, transient";
+  fill(100,100,150);
+  textSize(32);
+  text("How would you describe the \n pattern of your pain?", tBoxX + tBoxWidth/2, tBoxY + 100);
+  for (int i = 0; i < 3; i++) {
+   noStroke();
+   fill(color(100 + i*40,100 + i*15,100));
+   rect(tBoxX + 40, tBoxY + i*90 + 160, tBoxWidth-80, 75);
+   fill(0,0,255);
+   textSize(12);
+   text(i, tBoxX + 25, tBoxY + i*90 + 190);
+   text(patternA[i], tBoxX + 60, tBoxY + i*90 + 190);
   }
 }
 
@@ -150,6 +175,8 @@ void showTBox() { //displays popup window
     showWindowOne();
   } else if (winCount == 2) { //question 2
     showWindowTwo();
+  } else if (winCount == 3) { // question 3
+    showWindowThree();
   }
 }
 
