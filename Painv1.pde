@@ -39,6 +39,26 @@ int cancelHeight = 150;
 int ellsize = 40;
 int ellinc = 1;
 
+ArrayList<Circle> particles = new ArrayList<Circle>();
+Circle m;
+
+class Circle {
+  int pmouseX, pmouseY, ellsize;
+  color pc;
+
+  Circle(int ax, int ay, color c) {
+    pmouseX = ax;
+    pmouseY = ay;
+    ellsize = 80;
+    pc = c;
+  }  
+
+  void display() {
+    fill(pc);
+    ellipse(pmouseX, pmouseY, ellsize, ellsize);
+  }
+}
+
 void setup() {
 
   ellipseMode(CENTER);
@@ -53,7 +73,7 @@ void setup() {
 
 
 
-  defaultPainColor = color(230, 80, 0);
+  defaultPainColor = color(100,100,100);
   painColor = defaultPainColor;
   white1 = color(255,240,255);
   startedDrawing = false;
@@ -91,15 +111,24 @@ void draw() {
       showHistoryPage();
   }
   else {
-    if (mousePressed) {
+ if (mousePressed) {
       if (!tbox && !onCancelButton() && !onOkButton()){
+           m = new Circle(pmouseX, pmouseY, painColor);
+          particles.add(m);
           //drawLines();
-          noStroke();
-          fill(painColor);
-          ellipse(pmouseX, pmouseY, ellsize, ellsize);
+          //fill(painColor);
+          //ellipse(pmouseX, pmouseY, ellsize, ellsize);
           inDrawingMode = true;
         }
     }
+    
+  for (int i = 0; i < particles.size() ; i++) {
+    fill(painColor);
+    particles.get(i).display();
+  }
+  if (tbox) {
+   showTBox();
+  }
     ellsize = ellsize + ellinc;
     if(ellsize > 60) {
       ellinc--;
@@ -239,7 +268,8 @@ int getScaleButton() {
 }
 
 color colorScale(int i) {
-  return color(100 + i*40,100 + i*15,100);
+  return currentPainColor[i];
+  //return color(100 + i*40,100 + i*15,100);
 }
 
 void makeWindowOneButton(int i) {
@@ -366,6 +396,7 @@ void redrawPainArea() {
   }
 }
 
+/*
 void doReset() {
     tbox = false;
     winCount = 0;
@@ -379,6 +410,27 @@ void doCancel() {
     linesX = new ArrayList();
     linesY = new ArrayList();
     painColor = defaultPainColor;
+}
+*/
+void doReset() {
+    tbox = false;
+    winCount = 0;
+    image(img, 0, 0);
+    showTitleLabel();
+    try {
+      m.pc = colorScale(painLevel - 1);
+    //m.display();
+    } catch (Exception e) {         //SUP
+      print("NOOOOO");
+    }
+    //redrawPainArea();
+}
+
+void doCancel() {
+    linesX = new ArrayList();
+    linesY = new ArrayList();
+    painColor = defaultPainColor;
+    particles = new ArrayList();      // SUP
 }
 
 void showCancelButton() {
